@@ -7,5 +7,23 @@
 </head>
 <body>
     <h1> CodeChef Virtual Contest App</h1>
+    <button onclick="redirectMe()">OAuth CodeChef To Continue!</button>
+
 </body>
+<script>
+    const getClientId = '<%= client_id %>';
+    const getRedirectURI = '<%= redirectURI %>';
+    function redirectMe(){
+        var params = {
+        response_type: 'code',
+        client_id: getClientId,
+        state: 'xyz',
+        redirect_uri:getRedirectURI
+        };
+
+        var esc = encodeURIComponent;
+        var query = Object.keys(params).map(k => esc(k) + '=' + esc(params[k])).join('&');
+        window.location.replace('https://api.codechef.com/oauth/authorize?'+query);
+    };
+</script>
 </html>
