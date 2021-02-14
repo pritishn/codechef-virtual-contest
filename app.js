@@ -11,6 +11,7 @@ connectDB();
 
 const app = express();
 
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 app.listen(process.env.PORT,console.log(`Started running in ${process.env.NODE_ENV} mode on port ${process.env.PORT}.`));

@@ -1,0 +1,16 @@
+p{
+    margin: 10px 0 !important;
+}
+body{
+    background: #edc7b7;
+    font-family: 'Patrick Hand', cursive;
+}
+.login-container{
+    width: 800px;
+    margin-top: 200px;
+    text-align: center;
+}
+.card{
+    background:#DB8C44;
+    border-radius: 25px;
+}
