@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeChef VC</title>
-    
+
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    
 </head>
+
 <body>
-        <div class="container login-container">
-                <div class="card">
-                    <div class="card-content">
-                            <h3>Codechef Virtual Contest</h3>
-                            <div class="section">
-                                <p class="lead">
-                                    Give me some text
-                                </p>
-                            </div>
-                            
-                            <div class="divider"></div>
-                            <div class="section">
-                                <button onclick="redirectMe()" class="btn #795548 brown"><i class="fas fa-code"></i>Login with CodeChef</button>
-                            </div>
-                    </div>
-                </div>
+    <div class="container login-container">
+        <div>
+            <h3>CODECHEF VIRTUAL CONTEST</h3>
+            <div class="section">
+                  
             </div>
+
+            <div class="section">
+                <button onclick="redirectMe()" class="btn blue">Login with CodeChef</button>
+            </div>
+        </div>
+    </div>
+    </div>
 </body>
 <script>
     const getClientId = '<%= client_id %>';
     const getRedirectURI = '<%= redirectURI %>';
-    function redirectMe(){
+    function redirectMe() {
         var params = {
-        response_type: 'code',
-        client_id: getClientId,
-        state: 'xyz',
-        redirect_uri:getRedirectURI
+            response_type: 'code',
+            client_id: getClientId,
+            state: 'xyz',
+            redirect_uri: getRedirectURI
         };
 
         var esc = encodeURIComponent;
         var query = Object.keys(params).map(k => esc(k) + '=' + esc(params[k])).join('&');
-        window.location.replace('https://api.codechef.com/oauth/authorize?'+query);
+        window.location.replace('https://api.codechef.com/oauth/authorize?' + query);
     };
 </script>
+
 </html>
