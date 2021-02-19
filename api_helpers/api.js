@@ -50,3 +50,12 @@ const fetchContestList = async (options) => {
     return response.data.content.contestList;
 }
 
+const UserDetails = async(options) =>{
+    const path = `https://api.codechef.com/users/me`;
+    const response = await GET_requests(path,options);
+    return response;
+}
+
+module.exports = {UserDetails};
+
+
