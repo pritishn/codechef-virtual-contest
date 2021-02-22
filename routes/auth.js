@@ -6,8 +6,12 @@ router.get('/authDone', async (req,res)=>{
     let authCode = req.query.code, state = req.query.state;
     let done = await initiateAuthorization(authCode,state);
     if(done){
-        res.redirect('/dashboard');
+        
+        res.cookie('username',done.userDetails.username);
+        res.cookie('accessToken',done.encryptedAccessToken,{maxAge:1000*60*30});//resets accessToken in 30mins
+        res.cookie('refreshToken',done.encryptedRefreshToken);
 
+        res.redirect('/dashboard');
     }else{
         res.redirect('/authFailed');
     }

@@ -1,61 +1,44 @@
-const https = require('https');
 const request = require('request');
-const { options } = require('../routes/auth');
-const {global_acccess_token,global_refresh_token} = require('./token');
 
-
-const GET_requests = async (path,options) => {
-    
-    //passed in options 
+const GET_requests = async (path, options) => {
     //let options ={
-    //     'Authorization': 'Bearer '+ oauth_details.access_token
+    //     'Authorization': 'Bearer '+ access_token
     //};
-    return new Promise((resolve,reject)=>{ 
+    return new Promise((resolve, reject) => {
         request({
             url: path,
             method: "GET",
-            json: true, 
+            json: true,
             headers: options
-        }, (error, response, body) =>{
-            if(error){
+        }, (error, response, body) => {
+            if (error) {
                 reject(error);
-            }else{
+            } else {
                 resolve(body.result.data);
             }
         });
     });
 }
 
-// get contest details helper
 
-const fetchContests = async (contestCode , options ) => {
 
-    //"https://api.codechef.com/contests/{contestCode}?fields=&sortBy=&sortOrder="
-
+const fetchContest = async (contestCode, options) => {
     const path = `https://api.codechef.com/contests/${contestCode}?fields=code,name,startDate,endDate,type,announcements,problemsList`;
-
-    const response = await GET_requests(path,options);
-
-    return response.data.content[0];
+    const response = await GET_requests(path, options);
+    return response.content[0];
 }
 
 const fetchContestList = async (options) => {
-
     //"https://api.codechef.com/contests/{contestCode}?fields=&sortBy=&sortOrder="
-
     const path = `https://api.codechef.com/contests?fields=code,name,startDate,endDate&status=past`;
-
-    const response = await GET_requests(path,options);
-
-    return response.data.content.contestList;
+    const response = await GET_requests(path, options);
+    return response.content.contestList;
 }
 
-const UserDetails = async(options) =>{
+const getUserDetails = async (options) => {
     const path = `https://api.codechef.com/users/me`;
-    const response = await GET_requests(path,options);
-    return response;
+    const response = await GET_requests(path, options);
+    return response.content;
 }
 
-module.exports = {UserDetails};
-
-
+module.exports = {getUserDetails,fetchContestList,fetchContest};
