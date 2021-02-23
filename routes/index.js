@@ -36,13 +36,17 @@ router.get("/authFailed", (req, res) => {
     res.render("failed");
 });
 
-router.get("/contestlist",async (req,res)=>{
+router.get("/contestlist",(req,res)=>{
+    res.render("contestList");
+});
+
+router.get("/getContestList",async (req,res)=>{
     let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
     let list = await fetchContestList(options);
     const userDetails = await getUserDetails(options);
     const attemptedContest = userDetails.problemStats.attempted;
-    console.log(attemptedContest);
-    res.render("contestList",{list:list,attemptedContest:attemptedContest});
+    res.json({contestList : list, attemptedContest : attemptedContest});
 });
+
 
 module.exports = router;
