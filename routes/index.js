@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const {fetchContestList} = require('../api_helpers/api');
+const {decrypt} = require('../api_helpers/cryptoHelper');
+const {getUserDetails} = require('../api_helpers/api');
+
 
 const checkAccessToken = async (req, res, next) => {
     if (req.cookies.hasOwnProperty("accessToken")) {
@@ -30,6 +34,15 @@ router.get("/dashboard", checkAccessToken, (req, res) => {
 
 router.get("/authFailed", (req, res) => {
     res.render("failed");
+});
+
+router.get("/contestlist",async (req,res)=>{
+    let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+    let list = await fetchContestList(options);
+    const userDetails = await getUserDetails(options);
+    const attemptedContest = userDetails.problemStats.attempted;
+    console.log(attemptedContest);
+    res.render("contestList",{list:list,attemptedContest:attemptedContest});
 });
 
 module.exports = router;
