@@ -22,9 +22,82 @@
     </div>
 </body>
 <script type="text/javascript">
+    var list = new Array();
+    var attemptedlist = new Array();
+    var pageList = new Array();
+    var currentPage = 1;
+    var numberPerPage = 10;
+    var numberOfPages = 0;
+    function checkattempted(code){
+        if(code in attemptedlist){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    function getNumberOfPages() {
+        return Math.ceil(list.length / numberPerPage);
+    }
+
+    function nextPage() {
+        currentPage += 1;
+        loadList();
+    }
+
+    function previousPage() {
+        currentPage -= 1;
+        loadList();
+    }
+
+    function firstPage() {
+        currentPage = 1;
+        loadList();
+    }
+
+    function lastPage() {
+        currentPage = numberOfPages;
+        loadList();
+    }
+
+    function loadList() {
+        var begin = ((currentPage - 1) * numberPerPage);
+        var end = begin + numberPerPage;
+
+        pageList = list.slice(begin, end);
+        drawList();
+        check();
+    }
+        
+    function drawList() {
+        document.getElementById("list").innerHTML = "";
+        for (r = 0; r < pageList.length; r++) {
+            if(checkattempted(pageList[r].code))
+            document.getElementById("list").innerHTML += "<span style='color: red;'>"+pageList[r].code +"</span>"  + "<br/>";
+            else{
+                document.getElementById("list").innerHTML += pageList[r].code  + "<br/>";   
+            }
+        }
+    }
+
+    function check() {
+        document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
+        document.getElementById("previous").disabled = currentPage == 1 ? true : false;
+        document.getElementById("first").disabled = currentPage == 1 ? true : false;
+        document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
+    }
+    function load() {
+            loadList();
+    }
    window.onload = async function(){
         var contestList = await (await fetch('/getContestList')).json(); 
         console.log(contestList);
+        list = contestList.contestList;
+        attemptedlist = contestList.attemptedContest;
+        console.log(list);
+        console.log(attemptedlist);
+        load();
    }
+
 </script>
 </html>
