@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include('partials/header') %>
-
   <body class="bg-dark">
     <div style="text-align: center">
       <nav class="navbar navbar-light justify-content-center bg-dark">
@@ -26,9 +25,15 @@
               <th scope="col">Attempted</th>
             </tr>
           </thead>
-          <tbody id="contest-table-data"></tbody>
+          <tbody id="contest-table-data">></tbody>  
         </table>
       </div>
+      <div class="container">
+        <div id="loader" class="spinner-border text-light" role="status">
+            <span class="sr-only"></span>
+        </div>
+      </div>
+      <br>
       <input
         type="button"
         class="btn btn-outline-light"
@@ -138,7 +143,9 @@
       loadList();
     }
     window.onload = async function () {
+      var loader = document.getElementById("loader");
       var contestList = await (await fetch("/getContestList")).json();
+      loader.classList.remove("spinner-border");
       console.log(contestList);
       list = contestList.contestList;
       attemptedlist = contestList.attemptedContest;
