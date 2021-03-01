@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeChef VC</title>
-</head>
-<body>
-    <h1> CodeChef Virtual Contest App</h1>
-    <h3>OAuth Done!</h3>
-    <button> <a href="contestlist"> Fetch Contest List! </a></button>
+<%- include('partials/header') %>
+<body class="bg-dark" style="text-align: center;">
+    <nav class="navbar navbar-light justify-content-center bg-dark">
+        <h6 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h6>
+    </nav>
+    <h3 class="text-white">Authorization Successful!</h3>
+    <a href="contestlist"><button class="btn btn-outline-light" >Show Contest List! </button></a>
 </body>
 </html>

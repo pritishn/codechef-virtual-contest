@@ -1,103 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeChef VC</title>
-</head>
+  <%- include('partials/header') %>
 
-<body>
-    <h1> CodeChef Virtual Contest App</h1>
-    <h3>Contest List fetched!</h3>
-    <!-- <ul>
-        
-    </ul> -->
-    <div style="text-align:center;">
-        <input type="button" id="first" onclick="firstPage()" value="first" />
-        <input type="button" id="next" onclick="nextPage()" value="next" />
-        <input type="button" id="previous" onclick="previousPage()" value="previous" />
-        <input type="button" id="last" onclick="lastPage()" value="last" />
-    
-        <div id="list"></div>
+  <body class="bg-dark">
+    <div style="text-align: center">
+      <nav class="navbar navbar-light justify-content-center bg-dark">
+        <h6 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h6>
+      </nav>
+      <br>
+      <span>
+          <input type="text" class="" placeholder="Search Contest" /> 
+      </span>
+      <span>
+          <button class="btn text-white">Search</button>
+      </span>
+
+      <div class="container">
+        <table id="contest-table" class="table table-dark table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Contest Name</th>
+              <th scope="col">Contest Code</th>
+              <th scope="col">Date</th>
+              <th scope="col">Attempted</th>
+            </tr>
+          </thead>
+          <tbody id="contest-table-data"></tbody>
+        </table>
+      </div>
+      <input
+        type="button"
+        class="btn btn-outline-light"
+        id="first"
+        onclick="firstPage()"
+        value="first"
+      />
+      <input
+        type="button"
+        class="btn btn-outline-light"
+        id="previous"
+        onclick="previousPage()"
+        value="previous"
+      />
+      <input
+        type="button"
+        class="btn btn-outline-light"
+        id="next"
+        onclick="nextPage()"
+        value="next"
+      />
+      <input
+        type="button"
+        class="btn btn-outline-light"
+        id="last"
+        onclick="lastPage()"
+        value="last"
+      />
     </div>
-</body>
-<script type="text/javascript">
-    var list = new Array();
+  </body>
+  <script type="text/javascript">
+    var list = new Set();
     var attemptedlist = new Array();
     var pageList = new Array();
     var currentPage = 1;
     var numberPerPage = 10;
     var numberOfPages = 0;
-    function checkattempted(code){
-        if(code in attemptedlist){
-            return true;
-        }else{
-            return false;
+
+    const getNumberOfPages = () => {
+      return Math.ceil(list.length / numberPerPage);
+    };
+
+    const nextPage = () => {
+      currentPage += 1;
+      loadList();
+    };
+
+    const previousPage = () => {
+      currentPage -= 1;
+      loadList();
+    };
+
+    const firstPage = () => {
+      currentPage = 1;
+      loadList();
+    };
+
+    const lastPage = () => {
+      currentPage = numberOfPages;
+      loadList();
+    };
+
+    const loadList = () => {
+      var begin = (currentPage - 1) * numberPerPage;
+      var end = begin + numberPerPage;
+
+      pageList = list.slice(begin, end);
+      drawList();
+      check();
+    };
+
+    const drawList = () => {
+      const e = document.getElementById("contest-table-data");
+      e.innerHTML = "";
+      for (r = 0; r < pageList.length; r++) {
+        if (pageList[r].code in attemptedlist)
+          e.innerHTML += `<tr>
+                        <th scope="row">${r + 1}</th>
+                        <td>${pageList[r].name}</td>
+                        <td>${pageList[r].code}</td>
+                        <td>${pageList[r].startDate}</td>
+                        <td>Attempted</td>
+                    </tr>`;
+        else {
+          e.innerHTML += `<tr>
+                        <th scope="row">${r + 1}</th>
+                        <td>${pageList[r].name}</td>
+                        <td>${pageList[r].code}</td>
+                        <td>${pageList[r].startDate}</td>
+                        <td> </td>
+                    </tr>`;
         }
-    }
-    
-    function getNumberOfPages() {
-        return Math.ceil(list.length / numberPerPage);
-    }
-
-    function nextPage() {
-        currentPage += 1;
-        loadList();
-    }
-
-    function previousPage() {
-        currentPage -= 1;
-        loadList();
-    }
-
-    function firstPage() {
-        currentPage = 1;
-        loadList();
-    }
-
-    function lastPage() {
-        currentPage = numberOfPages;
-        loadList();
-    }
-
-    function loadList() {
-        var begin = ((currentPage - 1) * numberPerPage);
-        var end = begin + numberPerPage;
-
-        pageList = list.slice(begin, end);
-        drawList();
-        check();
-    }
-        
-    function drawList() {
-        document.getElementById("list").innerHTML = "";
-        for (r = 0; r < pageList.length; r++) {
-            if(checkattempted(pageList[r].code))
-            document.getElementById("list").innerHTML += "<span style='color: red;'>"+pageList[r].code +"</span>"  + "<br/>";
-            else{
-                document.getElementById("list").innerHTML += pageList[r].code  + "<br/>";   
-            }
-        }
-    }
+      }
+    };
 
     function check() {
-        document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
-        document.getElementById("previous").disabled = currentPage == 1 ? true : false;
-        document.getElementById("first").disabled = currentPage == 1 ? true : false;
-        document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
+      document.getElementById("next").disabled =
+        currentPage == numberOfPages ? true : false;
+      document.getElementById("previous").disabled =
+        currentPage == 1 ? true : false;
+      document.getElementById("first").disabled =
+        currentPage == 1 ? true : false;
+      document.getElementById("last").disabled =
+        currentPage == numberOfPages ? true : false;
     }
     function load() {
-            loadList();
+      loadList();
     }
-   window.onload = async function(){
-        var contestList = await (await fetch('/getContestList')).json(); 
-        console.log(contestList);
-        list = contestList.contestList;
-        attemptedlist = contestList.attemptedContest;
-        console.log(list);
-        console.log(attemptedlist);
-        load();
-   }
-
-</script>
+    window.onload = async function () {
+      var contestList = await (await fetch("/getContestList")).json();
+      console.log(contestList);
+      list = contestList.contestList;
+      attemptedlist = contestList.attemptedContest;
+      console.log(list);
+      console.log(attemptedlist);
+      load();
+    };
+  </script>
 </html>
