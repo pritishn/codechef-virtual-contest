@@ -1,36 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeChef VC</title>
-
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    
-</head>
-
-<body>
-    <div class="container login-container">
-        <div>
-            <h3>CODECHEF VIRTUAL CONTEST</h3>
-            <div class="section">
-                  
-            </div>
-
-            <div class="section">
-                <button onclick="redirectMe()" class="btn blue">Login with CodeChef</button>
-            </div>
-        </div>
+<%- include('partials/header') %>
+<body class="bg-dark">
+    <nav class="navbar navbar-light justify-content-center bg-dark">
+      <h1 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h1>
+    </nav>
+    <div class="container w-100 my-5">
+      <button type="button" onclick="redirectMe()" class="d-block btn btn-dark mx-auto border border-light">LOGIN WITH CODECHEF</button>
     </div>
-    </div>
-</body>
+  </body>
 <script>
     const getClientId = '<%= client_id %>';
     const getRedirectURI = '<%= redirectURI %>';
