@@ -1,9 +1,7 @@
 const request = require('request');
 
 const GET_requests = async (path, options) => {
-    //let options ={
-    //     'Authorization': 'Bearer '+ access_token
-    //};
+    //let options ={'Authorization': 'Bearer '+ access_token };
     return new Promise((resolve, reject) => {
         request({
             url: path,
@@ -20,12 +18,10 @@ const GET_requests = async (path, options) => {
     });
 }
 
-
-
 const fetchContest = async (contestCode, options) => {
     const path = `https://api.codechef.com/contests/${contestCode}?fields=code,name,startDate,endDate,type,announcements,problemsList`;
     const response = await GET_requests(path, options);
-    return response.content[0];
+    return response.content;
 }
 
 const fetchContestList = async (options) => {

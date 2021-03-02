@@ -23,7 +23,7 @@ const getNumberOfPages = () => {
 const drawList = () => {
     contestTable.innerHTML = "";
     for (r = 0; r < pageList.length; r++) {
-        if (attemptedlist.has(pageList[r].code))
+        if (pageList[r].code in attemptedlist )
             contestTable.innerHTML += `<tr>
                         <th scope="row">${r + 1}</th>
                         <td>${pageList[r].name}</td>
