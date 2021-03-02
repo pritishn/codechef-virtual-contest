@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <%- include('partials/header') %>
-
   <body class="bg-dark">
     <div style="text-align: center">
       <nav class="navbar navbar-light justify-content-center bg-dark">
@@ -9,10 +8,10 @@
       </nav>
       <br>
       <span>
-          <input type="text" class="" placeholder="Search Contest" /> 
+          <input type="text" id="search" class="" placeholder="Search Contest" /> 
       </span>
       <span>
-          <button class="btn text-white">Search</button>
+          <button class="btn text-white" onclick="search()">Search</button>
       </span>
 
       <div class="container">
@@ -26,9 +25,15 @@
               <th scope="col">Attempted</th>
             </tr>
           </thead>
-          <tbody id="contest-table-data"></tbody>
+          <tbody id="contest-table-data"></tbody>  
         </table>
       </div>
+      <div class="container">
+        <div id="loader" class="spinner-border text-light" role="status">
+            <span class="sr-only"></span>
+        </div>
+      </div>
+      <br>
       <input
         type="button"
         class="btn btn-outline-light"
@@ -60,7 +65,8 @@
     </div>
   </body>
   <script type="text/javascript">
-    var list = new Set();
+    var list = new Array();
+    var newList = new Array();
     var attemptedlist = new Array();
     var pageList = new Array();
     var currentPage = 1;
@@ -68,7 +74,7 @@
     var numberOfPages = 0;
 
     const getNumberOfPages = () => {
-      return Math.ceil(list.length / numberPerPage);
+      return Math.ceil(newList.length / numberPerPage);
     };
 
     const nextPage = () => {
@@ -95,7 +101,7 @@
       var begin = (currentPage - 1) * numberPerPage;
       var end = begin + numberPerPage;
 
-      pageList = list.slice(begin, end);
+      pageList = newList.slice(begin, end);
       drawList();
       check();
     };
@@ -138,13 +144,40 @@
       loadList();
     }
     window.onload = async function () {
+      var loader = document.getElementById("loader");
       var contestList = await (await fetch("/getContestList")).json();
+      loader.classList.remove("spinner-border");
       console.log(contestList);
       list = contestList.contestList;
+      newList = list;
       attemptedlist = contestList.attemptedContest;
       console.log(list);
       console.log(attemptedlist);
       load();
     };
+    function search(){
+        var value = document.getElementById("search").value;
+        const e = document.getElementById("contest-table-data");
+        if(value == ""){
+          return;
+        }
+        e.innerHTML = "";
+        value = value.toUpperCase();
+        newList = list;
+
+        var filteredList=new Array();
+        for(var i=0;i<newList.length;i++){
+          var x = newList[i].code;
+          var y = newList[i].name;
+          if(x.toUpperCase().indexOf(value)>-1 || y.toUpperCase().indexOf(value)>-1){
+            filteredList.push(newList[i]);
+          }
+        }
+        newList=filteredList;
+        if(newList.length == 0){
+          e.innerHTML("No results Found");
+        }
+        load();
+    }
   </script>
 </html>
