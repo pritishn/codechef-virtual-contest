@@ -38,146 +38,31 @@
         type="button"
         class="btn btn-outline-light"
         id="first"
-        onclick="firstPage()"
+        onclick="changePage(this);"
         value="first"
       />
       <input
         type="button"
         class="btn btn-outline-light"
         id="previous"
-        onclick="previousPage()"
+        onclick="changePage(this);"
         value="previous"
       />
       <input
         type="button"
         class="btn btn-outline-light"
         id="next"
-        onclick="nextPage()"
+        onclick="changePage(this);"
         value="next"
       />
       <input
         type="button"
         class="btn btn-outline-light"
         id="last"
-        onclick="lastPage()"
+        onclick="changePage(this);"
         value="last"
       />
     </div>
   </body>
-  <script type="text/javascript">
-    var list = new Array();
-    var newList = new Array();
-    var attemptedlist = new Array();
-    var pageList = new Array();
-    var currentPage = 1;
-    var numberPerPage = 10;
-    var numberOfPages = 0;
-
-    const getNumberOfPages = () => {
-      return Math.ceil(newList.length / numberPerPage);
-    };
-
-    const nextPage = () => {
-      currentPage += 1;
-      loadList();
-    };
-
-    const previousPage = () => {
-      currentPage -= 1;
-      loadList();
-    };
-
-    const firstPage = () => {
-      currentPage = 1;
-      loadList();
-    };
-
-    const lastPage = () => {
-      currentPage = numberOfPages;
-      loadList();
-    };
-
-    const loadList = () => {
-      var begin = (currentPage - 1) * numberPerPage;
-      var end = begin + numberPerPage;
-
-      pageList = newList.slice(begin, end);
-      drawList();
-      check();
-    };
-
-    const drawList = () => {
-      const e = document.getElementById("contest-table-data");
-      e.innerHTML = "";
-      for (r = 0; r < pageList.length; r++) {
-        if (pageList[r].code in attemptedlist)
-          e.innerHTML += `<tr>
-                        <th scope="row">${r + 1}</th>
-                        <td>${pageList[r].name}</td>
-                        <td>${pageList[r].code}</td>
-                        <td>${pageList[r].startDate}</td>
-                        <td>Attempted</td>
-                    </tr>`;
-        else {
-          e.innerHTML += `<tr>
-                        <th scope="row">${r + 1}</th>
-                        <td>${pageList[r].name}</td>
-                        <td>${pageList[r].code}</td>
-                        <td>${pageList[r].startDate}</td>
-                        <td> </td>
-                    </tr>`;
-        }
-      }
-    };
-
-    function check() {
-      document.getElementById("next").disabled =
-        currentPage == numberOfPages ? true : false;
-      document.getElementById("previous").disabled =
-        currentPage == 1 ? true : false;
-      document.getElementById("first").disabled =
-        currentPage == 1 ? true : false;
-      document.getElementById("last").disabled =
-        currentPage == numberOfPages ? true : false;
-    }
-    function load() {
-      loadList();
-    }
-    window.onload = async function () {
-      var loader = document.getElementById("loader");
-      var contestList = await (await fetch("/getContestList")).json();
-      loader.classList.remove("spinner-border");
-      console.log(contestList);
-      list = contestList.contestList;
-      newList = list;
-      attemptedlist = contestList.attemptedContest;
-      console.log(list);
-      console.log(attemptedlist);
-      load();
-    };
-    function search(){
-        var value = document.getElementById("search").value;
-        const e = document.getElementById("contest-table-data");
-        if(value == ""){
-          return;
-        }
-        e.innerHTML = "";
-        value = value.toUpperCase();
-        newList = list;
-
-        var filteredList=new Array();
-        for(var i=0;i<newList.length;i++){
-          var x = newList[i].code;
-          var y = newList[i].name;
-          if(x.toUpperCase().indexOf(value)>-1 || y.toUpperCase().indexOf(value)>-1){
-            filteredList.push(newList[i]);
-          }
-        }
-        newList=filteredList;
-        if(newList.length == 0){
-          e.innerHTML("No results Found");
-        }
-        load();
-    }
-  </script>
+  <script src="/js/contestList.js"></script>
 </html>
