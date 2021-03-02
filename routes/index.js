@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const {fetchContestList} = require('../api_helpers/api');
+const {fetchContestList,fetchContest,getUserDetails} = require('../api_helpers/api');
 const {decrypt} = require('../api_helpers/cryptoHelper');
-const {getUserDetails} = require('../api_helpers/api');
+const {getNewAccessToken} = require('../api_helpers/token');
 
 
 const checkAccessToken = async (req, res, next) => {
@@ -40,7 +40,7 @@ router.get("/contestlist",(req,res)=>{
     res.render("contestList");
 });
 
-router.get("/getContestList",async (req,res)=>{
+router.get("/getContestList",checkAccessToken,async (req,res)=>{
     let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
     let list = await fetchContestList(options);
     const userDetails = await getUserDetails(options);
@@ -48,5 +48,106 @@ router.get("/getContestList",async (req,res)=>{
     res.json({contestList : list, attemptedContest : attemptedContest});
 });
 
+router.get("/contestPage/:contestID",checkAccessToken,async (req,res)=>{
+    let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+    let details = await fetchContest(req.params.contestID,options);
+    console.log(details);
+    res.render('contestPage',details);
+});
 
 module.exports = router;
+
+
+// {
+//     code: 'DGTC2021',
+//     name: 'DeCode 2021',
+//     startDate: '2021-03-01 21:00:00',
+//     endDate: '2021-03-01 23:00:00',
+//     announcements: '&lt;p&gt;14:30, 15th October 2017: The exam is extended by 10 minutes.&lt;br /&gt;&lt;b&gt;&lt;br /&gt;The problem weightages are given below in rules section.&lt;/b&gt;&lt;/p&gt;\r\n' +
+//       '&lt;p&gt;The content of Recent Activity block from exam page has been made inaccessible. In case if you try to access it, you will get an error stating&nbsp;&lt;b&gt;&quot;You are not allowed to check this contest. Please reload&quot;&lt;/b&gt;. Please ignore the error and continue with your exam.&lt;/p&gt;\r\n' +
+//       '&lt;p&gt;14:44, 15th October 2017: Problem accuracy will not be displayed. It has been restricted for this exam.&lt;/p&gt;\r\n' +
+//       '&lt;p&gt;Also, the score shown on the exam page is not final. It is subject to change after final verification.&lt;/p&gt;\r\n' +
+//       '&lt;p&gt;Additionally, you cannot leave the exam hall before 3:30 pm.&lt;/p&gt;',
+//     problemsList: [
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'STUDCOMP',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 170,
+//         accuracy: 32.89719626168225
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'PRINSEC',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 263,
+//         accuracy: 29.74472807991121
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'MAXWND',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 10,
+//         accuracy: 23.809523809523807
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'BUGINDP',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 14,
+//         accuracy: 18.181818181818183
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'ENCCIRC',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 65,
+//         accuracy: 26.171875
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'VINMAZE',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 24,
+//         accuracy: 32.95454545454545
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'PROJOVER',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 98,
+//         accuracy: 36.17021276595745
+//       },
+//       {
+//         viewStart: '2021-03-01 21:00:00',
+//         submitStart: '2021-03-01 21:00:00',
+//         visibleStart: '2021-03-01 23:00:00',
+//         end: '2021-03-01 23:00:00',
+//         problemCode: 'AVGNUMBS',
+//         contestCode: 'DGTC2021',
+//         successfulSubmissions: 303,
+//         accuracy: 15.396113602391628
+//       }
+//     ]
+//   }

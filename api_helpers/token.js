@@ -11,7 +11,7 @@ const initiateAuthorization = async (authCode, state) => {
         const encryptedRefreshToken = encrypt(oauth_details.refresh_token);
 
         const userDetails = await getUserDetails(options);
-     
+    
         return { userDetails, encryptedAccessToken, encryptedRefreshToken };
     } else return null;
 }
