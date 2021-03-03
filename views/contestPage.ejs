@@ -15,17 +15,19 @@
             <table id="contest-table" class="table table-dark table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">Problem Name</th>
                     <th scope="col">Problem Code</th>
                     <th scope="col">Submissions</th>
                   </tr>
                 </thead>
                 <tbody id="contest-table-data">
-                   
+                        <% for(var i=0; i < problemsList.length; i++) { %>
+                            <tr>
+                              <td><a href="/contestPage/<%= code %>/problem/<%= problemsList[i].problemCode %>"><%= problemsList[i].problemCode %></a></td>
+                              <td><%= problemsList[i].successfulSubmissions %></td>
+                            </tr>
+                         <% } %>
                 </tbody>  
             </table>
         </div>
     </body>
-    <script src="/js/contestList.js"></script>
-
 </html>

@@ -34,7 +34,7 @@ const drawList = () => {
         else {
             contestTable.innerHTML += `<tr>
                         <th scope="row">${r + 1}</th>
-                        <td>${pageList[r].name}</td>
+                        <td><a href="/contestpage/${pageList[r].code}">${pageList[r].name}</a></td>
                         <td>${pageList[r].code}</td>
                         <td>${pageList[r].startDate}</td>
                         <td> </td>

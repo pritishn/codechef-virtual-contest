@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {fetchContestList,fetchContest,getUserDetails} = require('../api_helpers/api');
+const {fetchContestList,fetchContest,getUserDetails,problem} = require('../api_helpers/api');
 const {decrypt} = require('../api_helpers/cryptoHelper');
 const {getNewAccessToken} = require('../api_helpers/token');
 
@@ -53,6 +53,12 @@ router.get("/contestPage/:contestID",checkAccessToken,async (req,res)=>{
     let details = await fetchContest(req.params.contestID,options);
     console.log(details);
     res.render('contestPage',details);
+}); 
+router.get("/contestPage/:contestID/problem/:problemCode",checkAccessToken,async (req,res)=>{
+    let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+    let problemDetails = await problem(req.params.contestID,req.params.problemCode,options);
+    console.log(problemDetails);
+    res.render('problemPage',problemDetails);
 });
 
 module.exports = router;
