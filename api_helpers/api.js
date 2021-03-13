@@ -31,10 +31,18 @@ const fetchContestList = async (options) => {
     return response.content.contestList;
 }
 
+const problem = async (contestCode,problemCode,options)=>{
+    const path = `https://api.codechef.com/contests/${contestCode}/problems/${problemCode}?fields=`;
+    const response = await GET_requests(path, options);
+    return response.content;
+}
+
+
+
 const getUserDetails = async (options) => {
     const path = `https://api.codechef.com/users/me`;
     const response = await GET_requests(path, options);
     return response.content;
 }
 
-module.exports = {getUserDetails,fetchContestList,fetchContest};
+module.exports = {getUserDetails,fetchContestList,fetchContest,problem};
