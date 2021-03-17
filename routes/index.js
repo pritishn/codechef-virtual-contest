@@ -4,6 +4,8 @@ const {fetchContestList,fetchContest,getUserDetails,problem} = require('../api_h
 const {decrypt} = require('../api_helpers/cryptoHelper');
 const {getNewAccessToken} = require('../api_helpers/token');
 
+const showdown  = require('showdown');
+const converter = new showdown.Converter();
 
 const checkAccessToken = async (req, res, next) => {
     if (req.cookies.hasOwnProperty("accessToken")) {
@@ -51,14 +53,15 @@ router.get("/getContestList",checkAccessToken,async (req,res)=>{
 router.get("/contestPage/:contestID",checkAccessToken,async (req,res)=>{
     let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
     let details = await fetchContest(req.params.contestID,options);
-    console.log(details);
     res.render('contestPage',details);
 }); 
 router.get("/contestPage/:contestID/problem/:problemCode",checkAccessToken,async (req,res)=>{
     let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
     let problemDetails = await problem(req.params.contestID,req.params.problemCode,options);
-    console.log(problemDetails);
-    res.render('problemPage',problemDetails);
+    let data=`${problemDetails.body}`;
+    data = data.replace(/<br\s*\/?>/gi, '\n');
+    console.log("data : ",data);
+    res.render('problemPage',{problemName : problemDetails.problemName,body:data});
 });
 
 module.exports = router;

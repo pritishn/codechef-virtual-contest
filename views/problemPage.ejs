@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+    
 <%- include('partials/header') %>
-
-    <body class="bg-dark">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <body class="bg-dark text-white">
         <nav class="navbar navbar-light justify-content-center bg-dark">
             <h6 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h6>
         </nav>
         <br>
-        <div class="container"style="text-align: center"> 
-            <h3 class="text-white">
-                <%= problemName %>
-            </h3>
-            <p class="text-white">
-            <%- body %>
-            </p>
+        <div class="container"> 
+            <h1 class="text-white">
+            <%= problemName %>
+            </h1>
+            <p class="text-white " id="problem-statement"><%- body %></p>
         </div>
     </body>
+    <script>
+        var converter = new showdown.Converter();
+        console.log(document.getElementById('problem-statement').innerHTML);
+        var html1 = converter.makeHtml(document.getElementById('problem-statement').innerHTML);
+        console.log(html1);
+        document.getElementById('problem-statement').innerHTML = html1;
+    </script>
 </html>
