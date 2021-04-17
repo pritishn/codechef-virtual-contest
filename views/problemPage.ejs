@@ -2,7 +2,6 @@
 <html lang="en">
     
 <%- include('partials/header') %>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <body class="bg-dark text-white">
         <nav class="navbar navbar-light justify-content-center bg-dark">
             <h6 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h6>
@@ -17,6 +16,22 @@
     </body>
     <script>
         var converter = new showdown.Converter();
+        converter.setOption('omitExtraWLInCodeBlocks', true);
+        converter.setOption('noHeaderId', true);
+        converter.setOption('parseImgDimensions', true);
+        converter.setOption('simplifiedAutoLink', true);
+        converter.setOption('literalMidWordUnderscores', true);
+        converter.setOption('strikethrough', true);
+        converter.setOption('tables', true);
+        converter.setOption('tablesHeaderId', false);
+        converter.setOption('ghCodeBlocks', true);
+        converter.setOption('tasklists', true);
+        converter.setOption('smoothLivePreview', true);
+        converter.setOption('prefixHeaderId', false);
+        converter.setOption('disableForced4SpacesIndentedSublists', false);
+        converter.setOption('ghCompatibleHeaderId', true);
+        converter.setOption('smartIndentationFix', false);
+        
         console.log(document.getElementById('problem-statement').innerHTML);
         var html1 = converter.makeHtml(document.getElementById('problem-statement').innerHTML);
         console.log(html1);

@@ -23,21 +23,21 @@ const getNumberOfPages = () => {
 const drawList = () => {
     contestTable.innerHTML = "";
     for (r = 0; r < pageList.length; r++) {
-        if (pageList[r].code in attemptedlist )
+        if (pageList[r].code in attemptedlist ){
             contestTable.innerHTML += `<tr>
                         <th scope="row">${r + 1}</th>
-                        <td>${pageList[r].name}</td>
                         <td>${pageList[r].code}</td>
+                        <td>${pageList[r].name}</td>
                         <td>${pageList[r].startDate}</td>
                         <td>Attempted</td>
                         </tr>`;
-        else {
+        } else {
             contestTable.innerHTML += `<tr>
                         <th scope="row">${r + 1}</th>
-                        <td><a href="/contestpage/${pageList[r].code}">${pageList[r].name}</a></td>
                         <td>${pageList[r].code}</td>
+                        <td><a href="/contestpage/${pageList[r].code}" style=" color: #FFFFFF; text-decoration: none;">${pageList[r].name}&#x1F517</a></td>
                         <td>${pageList[r].startDate}</td>
-                        <td> </td>
+                        <td>Not Attempted</td>
                     </tr>`;
         }
     }

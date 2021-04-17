@@ -8,7 +8,7 @@ router.get('/authDone', async (req,res)=>{
     if(done){
         
         res.cookie('username',done.userDetails.username);
-        res.cookie('accessToken',done.encryptedAccessToken,{maxAge:1000*60*30});//resets accessToken in 30mins
+        res.cookie('accessToken',done.encryptedAccessToken,{maxAge:1000*30*1});//resets accessToken in 30mins
         res.cookie('refreshToken',done.encryptedRefreshToken);
 
         res.redirect('/dashboard');

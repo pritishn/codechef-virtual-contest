@@ -9,22 +9,15 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    accessToken:{
-        type:String,
-        required:true
-    },
     scope:{
-        type:String,
-        required:true
-    },
-    refreshToken:{
         type:String,
         required:true
     },
     createdAt:{
         type:Date,
         deafult:Date.now
-    }
+    },
+    contestList: []
 })
 
 module.exports = mongoose.model('User',UserSchema);
