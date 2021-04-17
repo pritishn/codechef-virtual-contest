@@ -1,47 +1,22 @@
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/bootstrap.min.js"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-          "HTML-CSS": {
-            preferredFont: "TeX",
-            availableFonts: ["STIX","TeX"],
-            linebreaks: { automatic:true },
-            EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-          },
-          ShowMathMenu: false,
-          TeX: {
-            extensions: ["color.js"],
-            noUndefined: {
-              attributes: {
-                mathcolor: "red",
-                mathbackground: "#FFEEEE",
-                mathsize: "90%"
-              }
-            },
-            Macros: { href: "{}" }
-          },
-          tex2jax: {
-            inlineMath: [['$','$'], ['\\(','\\)']],
-            displayMath: [ ["$$","$$"], ["\\[", "\\]"] ],
-            multiline: true,
-            processEscapes: true,
-            ignoreClass: "[a-zA-Z1-9]*",
-            processClass: "mathjax-support"
-          },
-          menuSettings: {
-            context: "Browser"
-          },
-          messageStyle: "none"
-        });
-    </script>
-    <script type="text/javascript" src="/js/MathJax.js"></script>
-    <script type="text/javascript" src="/js/showdown-1.8.6.min.js"></script>
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-    <title>CodeChef VC</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/bootstrap.min.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+  <!-- <script type="text/javascript" src="/js/showdown-1.8.6.min.js"></script> -->
+  <link rel = "icon" href = "/assets/logo-black.png" type = "image/x-icon">
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+    rel="stylesheet"
+  />
+  <script type="text/javascript" src="https://rawgit.com/showdownjs/showdown/develop/dist/showdown.min.js"></script>
+  <title>CodeChef VC</title>
 </head>
