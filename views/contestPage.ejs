@@ -3,12 +3,12 @@
 <%- include('partials/header') %>
 
     <body class="bg-dark">
-        <nav class="navbar navbar-light justify-content-center bg-dark">
-            <h6 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h6>
-        </nav>
+            <nav class="navbar navbar-light bg-dark ">
+                    <h2 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h2>
+                    <a href="http://localhost:3000/logout" ><button class="btn btn-outline-light">Logout</button></a>
+                </nav>
         <br>
         <div class="container"style="text-align: left">
-            
            <h3 class="text-white">
             <span><%= name %></span><span>Button</span>
             </h3>
@@ -28,6 +28,9 @@
                          <% } %>
                 </tbody>  
             </table>
+            <h4 class="text-red">
+                <a href="/contestPage/<%= code %>/ranklist">Ranklist</a>
+            </h4>
             <h5 class="text-white">
                 Announcements : 
             </h5>

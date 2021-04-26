@@ -12,6 +12,7 @@ const makeGETRequest = async (path, options) => {
             json: true,
             headers: options
         }, (error, response, body) => {
+            console.log(body)
             if (error) {
                 console.log("\x1b[31mERROR in GET request\x1b[0m",error);
                 reject(error);
@@ -41,10 +42,16 @@ const problem = async (contestCode,problemCode,options)=>{
     return response.content;
 }
 
+const ranklist = async(contestCode,options)=>{
+    const path = `https://api.codechef.com/rankings/${contestCode}?field=`;
+    const response = await makeGETRequest(path, options);
+    return response.content;
+}
+
 const getUserDetails = async (options) => {
     const path = `https://api.codechef.com/users/me`;
     const response = await makeGETRequest(path, options);
     return response.content;
 }
 
-module.exports = {getUserDetails,fetchContestList,fetchContest,problem};
+module.exports = {getUserDetails,fetchContestList,fetchContest,problem,ranklist};
