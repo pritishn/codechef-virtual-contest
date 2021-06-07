@@ -15,7 +15,7 @@ const checkAccessToken = async (req, res, next) => {
         try{
             const done = await getNewAccessToken(`${decrypt(req.cookies['refreshToken'])}`);
             console.log("\x1b[35mGENERATED NEW ACCESS TOKEN\x1b[0m");
-            res.cookie("accessToken", done.encryptedAccessToken, {maxAge: 1000 * 60 * 15, }); //resets accessToken in 30mins
+            res.cookie("accessToken", done.encryptedAccessToken, {maxAge: 1000 * 60 * 30, }); //resets accessToken in 30mins
             res.cookie("refreshToken", done.encryptedRefreshToken);
             res.redirect('back');
         }catch(e){

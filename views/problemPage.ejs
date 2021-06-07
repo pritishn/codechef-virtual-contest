@@ -3,19 +3,23 @@
     
 <%- include('partials/header') %>
     <body class="bg-dark text-white justify-content-center">
-            <nav class="navbar navbar-light bg-dark ">
-                    <h2 class="text-white" href="#">CODECHEF VIRTUAL CONTEST</h2>
-                    <a href="http://localhost:3000/logout" ><button class="btn btn-outline-light">Logout</button></a>
-                </nav>
-        <br>
-        <div class="container"> 
-            <h1 class="text-white">
-            <%= problemName %>
-            </h1>
+        <style>
+            h3{
+                font-size:1.4em;
+                display: inline-block;
+            }
+            h2{
+                display: inline-block;
+            }
+        </style>
+        <div class="container-fluid" style="padding: 0px 10px 0px 10px;">
+            <%- include('partials/navigation') %>
+            <span class="text-white">
+                <h2><%= problemName %></h2>
+            </span>
+            <a href="https://www.codechef.com/submit/<%= problemCode %>"><button class="btn btn-outline-light">Submit on codechef</button></a>
+            
             <p class="text-white " id="problem-statement"><%- body %></p>
-        </div>
-        <div class="container justify-content-center">
-        <button class="btn btn-outline-light"><a href="https://www.codechef.com/submit/<%= problemCode %>">Submit on codechef</a></button>
         </div>
     </body>
     <script>
