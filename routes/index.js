@@ -3,6 +3,9 @@ const router = express.Router();
 const { fetchContestList, fetchContest, getUserDetails, problem, ranklist } = require('../api_helpers/api');
 const { decrypt } = require('../api_helpers/cryptoHelper');
 const { getNewAccessToken } = require('../api_helpers/token');
+const User = require('../models/User');
+
+
 
 const checkAccessToken = async (req, res, next) => {
 
@@ -104,4 +107,33 @@ router.get("/contestPage/:contestID/ranklist",checkAccessToken,async (req,res)=>
     res.render('rankPage',{ ranklist:ranklist1});
 })
 
+router.get("/initiateVirtual/:contestID",checkAccessToken,async (req,res)=>{
+    let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+    const userDetails= await getUserDetails(options);
+    const username=userDetails.username;
+    const doesUserExist = await User.exists({ username: username });
+    if(doesUserExist==true){
+        //checkforvirtualcontest
+        //if virtualcontestexiststhenalert
+        //else render time page
+        const doesVirtualExist = await User.exists({username:username,virtualContest:true})
+        if(doesVirtualExist){
+            //render alert
+            console.log("Virtual going on");
+        }else{
+            //rendertimepage
+            console.log("Set Time");
+        }
+    }else{
+        //userdoesnotexist
+        //create user and render time page
+        const User1 = new User();
+        User1.username=username;
+        User1.virtualContest=false;
+        User1.save();
+        //render time page
+        console.log("Set Time");
+
+    }
+})
 module.exports = router;
