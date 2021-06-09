@@ -5,19 +5,15 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    fullname:{
-        type:String,
-        required:true
-    },
-    scope:{
-        type:String,
-        required:true
-    },
     createdAt:{
         type:Date,
-        deafult:Date.now
+        default:Date.now
     },
-    contestList: []
+    virtualContest:{
+        type:Boolean,
+        required:true
+    },
+    pastVirtualContest:[]
 })
 
 module.exports = mongoose.model('User',UserSchema);
