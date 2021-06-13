@@ -24,9 +24,21 @@ const makeGETRequest = async (path, options) => {
 }
 
 const fetchContest = async (contestCode, options) => {
-    const path = `https://api.codechef.com/contests/${contestCode}?fields=code,name,startDate,endDate,type,announcements,problemsList`;
+    const path = `https://api.codechef.com/contests/${contestCode}`;
     const response = await makeGETRequest(path, options);
     return response.content;
+}
+
+const ParseDate  = (d) => {
+   
+    let nd = d.substring(0,10)+"T"+d.substring(11);
+    let date = new Date(nd);
+    return date.getTime();
+}
+const fetchContestDuration = async (contestCode, options) => {
+    const path = `https://api.codechef.com/contests/${contestCode}/?fields=startDate%2CendDate`;
+    const response = await makeGETRequest(path, options);
+    return ParseDate(response.content.endDate)-ParseDate(response.content.startDate);
 }
 
 const fetchContestList = async (options) => {
@@ -42,8 +54,8 @@ const problem = async (contestCode,problemCode,options)=>{
     return response.content;
 }
 
-const ranklist = async(contestCode,options)=>{
-    const path = `https://api.codechef.com/rankings/${contestCode}?field=`;
+const fetchRanklist = async(contestCode,offset,options)=>{
+    const path = `https://api.codechef.com/rankings/${contestCode}?offset=${offset}`;
     const response = await makeGETRequest(path, options);
     return response.content;
 }
@@ -54,4 +66,4 @@ const getUserDetails = async (options) => {
     return response.content;
 }
 
-module.exports = {getUserDetails,fetchContestList,fetchContest,problem,ranklist};
+module.exports = {fetchContestDuration,getUserDetails,fetchContestList,fetchContest,problem,fetchRanklist};
