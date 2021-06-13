@@ -7,7 +7,6 @@ var currentPage = 1;
 const numberPerPage = 10;
 const numberOfPages = 0;
 
-
 const contestTable = document.getElementById("contest-table-data");
 const firstButton = document.getElementById("first");
 const previousButton = document.getElementById("previous");
@@ -69,7 +68,7 @@ const changePage = (ele) => {
         currentPage = numberOfPages;
     }
     loadList();
-}
+};
 
 
 window.onload = async function () {
@@ -84,7 +83,6 @@ window.onload = async function () {
 
 const search = () => {
     let value = document.getElementById("search").value;
-
     if (value == "") {
         newList = list;
         loadList(); 
@@ -105,4 +103,4 @@ const search = () => {
         newList = list;
     }
     loadList();
-}
+};

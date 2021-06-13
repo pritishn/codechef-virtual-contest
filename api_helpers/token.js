@@ -73,4 +73,26 @@ const getNewAccessToken = async (refresh_token) => {
     }
 }
 
-module.exports = { initiateAuthorization, getNewAccessToken };
+const checkAccessToken = async (req, res, next) => {
+
+    req.cookies = JSON.parse(JSON.stringify(req.cookies));
+
+    if (req.cookies.hasOwnProperty("accessToken")) {
+        next();
+    } else {
+        console.log("\x1b[35mTRYING TO FETCH NEW ACCESS TOKEN\x1b[0m");
+        try{
+            const done = await getNewAccessToken(`${decrypt(req.cookies['refreshToken'])}`);
+            console.log("\x1b[35mFETCHED NEW ACCESS TOKEN\x1b[0m");
+            res.cookie("accessToken", done.encryptedAccessToken, {maxAge: 1000 * 60 * 30, }); //resets accessToken in 30mins == 1.8e6 ms.
+            res.cookie("refreshToken", done.encryptedRefreshToken);
+            res.redirect(req.originalUrl);
+        }catch(e){
+            console.log("\x1b[35mFAILED TO FETCH NEW ACCESS TOKEN\x1b[0m");
+            res.redirect("/authFailed");
+        }
+    }
+};
+
+
+module.exports = { initiateAuthorization, getNewAccessToken, checkAccessToken };
