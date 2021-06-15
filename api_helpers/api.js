@@ -65,5 +65,4 @@ const getUserDetails = async (options) => {
     const response = await makeGETRequest(path, options);
     return response.content;
 }
-
 module.exports = {fetchContestDuration,getUserDetails,fetchContestList,fetchContest,problem,fetchRanklist};
