@@ -138,4 +138,29 @@ router.get(
 // router.get("/startVirtual/:contestCode",checkAccessToken,(req,res)=>{
 
 // });
+
+router.get("virtual/endVc",checkAccessToken, async (req, res) => {
+  //check if virtual exist and if it exist delete from schema virtualcontest
+  const contestCode = req.query.code;
+  const username = req.cookies["username"];
+  //render user rank
+  //Save the user rank here and render in a seperate page
+  const found = await VirtualContest.findOne({
+    username: username,
+    contestCode: contestCode
+  }).exec();
+  if(found==null){
+    res.status(400).send("This virtual contest does not exist.");
+  }else{
+  VirtualContest.remove({
+    username: username
+  }, function (err) {
+    if(err) console.log(err);
+    console.log("Successful deletion");
+  });
+  res.render("dashboard");
+  }
+})
+
+
 module.exports = router;
