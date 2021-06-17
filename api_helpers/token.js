@@ -5,8 +5,8 @@ const { decrypt, encrypt } = require('./cryptoHelper');
 
 /* used to make postRequsts  for tokens */
 const postRequest = async (options) => {
-    console.log('\x1b[36m%s\x1b[0m', 'POST REQUEST MADE');
-    console.log(options);
+    // console.log('\x1b[36m%s\x1b[0m', 'POST REQUEST MADE');
+    // console.log(options);
     return new Promise((resolve, reject) => {
         request({
             url: "https://api.codechef.com/oauth/token",
@@ -15,10 +15,10 @@ const postRequest = async (options) => {
             body: options
         }, (error, response, body) => {
             if (body.status == 'error') {
-                console.log("\x1b[31mERROR in POST request\x1b[0m",body.result.errors);
+                // console.log("\x1b[31mERROR in POST request\x1b[0m",body.result.errors);
                 reject(body.result);
             } else {
-                console.log('\x1b[36m%s\x1b[0m', 'POST REQUEST SUCCESSFUL',body.result);
+                // console.log('\x1b[36m%s\x1b[0m', 'POST REQUEST SUCCESSFUL',body.result);
                 resolve(body.result.data);
             }
         });
@@ -80,15 +80,15 @@ const checkAccessToken = async (req, res, next) => {
     if (req.cookies.hasOwnProperty("accessToken")) {
         next();
     } else {
-        console.log("\x1b[35mTRYING TO FETCH NEW ACCESS TOKEN\x1b[0m");
+        // console.log("\x1b[35mTRYING TO FETCH NEW ACCESS TOKEN\x1b[0m");
         try{
             const done = await getNewAccessToken(`${decrypt(req.cookies['refreshToken'])}`);
-            console.log("\x1b[35mFETCHED NEW ACCESS TOKEN\x1b[0m");
+            // console.log("\x1b[35mFETCHED NEW ACCESS TOKEN\x1b[0m");
             res.cookie("accessToken", done.encryptedAccessToken, {maxAge: 1000 * 60 * 30, }); //resets accessToken in 30mins == 1.8e6 ms.
             res.cookie("refreshToken", done.encryptedRefreshToken);
             res.redirect(req.originalUrl);
         }catch(e){
-            console.log("\x1b[35mFAILED TO FETCH NEW ACCESS TOKEN\x1b[0m");
+            // console.log("\x1b[35mFAILED TO FETCH NEW ACCESS TOKEN\x1b[0m");
             res.redirect("/authFailed");
         }
     }

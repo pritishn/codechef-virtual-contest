@@ -21,7 +21,6 @@ function encrypt(text) {
 }
 
 function decrypt(text) {
-    console.log("recieved token ", text);
     let textParts = text.split(":");
     let iv = Buffer.from(textParts.shift(), "hex");
     let encryptedText = Buffer.from(textParts.join(":"), "hex");
