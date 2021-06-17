@@ -1,42 +1,38 @@
 const express = require("express");
 const router = express.Router();
-const { fetchContestDuration } = require("../api_helpers/api");
+const { fetchContestDuration, fetchContest, fetchProblemDetails } = require("../api_helpers/api");
 const { decrypt } = require("../api_helpers/cryptoHelper");
 const { checkAccessToken } = require("../api_helpers/token");
+const { prepareRanklist } = require("../api_helpers/scraper");
 const { VirtualContest } = require("../models/Models");
 
 // routes related to virutal contest
 
 /* helpers */
 const doesVirtualExist = async (username, contestCode) => {
-
     const found = await VirtualContest.findOne({
         username: username,
-        contestCode: contestCode
+        contestCode: contestCode,
     }).exec();
-
+    console.log(username, contestCode);
     if (found == null) {
         return 0;
     } else {
-        console.log(found);
         if (found.isRunning == true) {
             return 1;
         } else return 2;
     }
 };
 const noVirtualRunning = async (username) => {
-    console.log("checking");
     const found = await VirtualContest.findOne({
         username: username,
-        isRunning: true
+        isRunning: true,
     }).exec();
     console.log(found);
-    if (found == null)
-        return true;
+    if (found == null) return true;
     else return false;
-
 };
-/* ----*/
+/* ---- */
 
 router.get("/setupVirtual/:contestCode", checkAccessToken, async (req, res) => {
     const username = req.cookies["username"];
@@ -55,112 +51,165 @@ router.get("/registerVC", checkAccessToken, async (req, res) => {
     if (ok == true) {
         try {
             try {
-                let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
-                var len = await fetchContestDuration(contestCode, options);
+                let options = {
+                    Authorization: "Bearer " + decrypt(req.cookies["accessToken"]),
+                };
+                var [len, realStartTime] = await fetchContestDuration(contestCode, options);
             } catch (err) {
                 res.status(500).send("Error in fetching contest duration");
             }
-            let cur = (Date.now());
+            let cur = Date.now();
             let end = cur + len;
             const newContest = new VirtualContest({
                 username: req.cookies["username"],
                 isRunning: true,
+                realStartTime: realStartTime,
                 startTime: cur,
                 endTime: end,
                 contestCode: contestCode,
-                problemsAttempted: []
+                problemsAttempted: [],
             });
-            
-            console.log(newContest);
+
             await newContest.save();
             res.redirect(`/virtual/${contestCode}`);
         } catch (err) {
-            console.log(err);
             res.status(500).send("Error in creating virtual contest");
         }
     } else {
         res.status(400).send("Virtual Contest Running Already");
     }
 });
-router.get("/virtual/:contestCode", checkAccessToken, async (req, res) => {
 
+router.get("/virtual/endVC", checkAccessToken, async (req, res) => {
+
+    const contestCode = req.query.code;
+    const username = req.cookies["username"];
+
+    const found = await VirtualContest.findOne({
+        username: username,
+        contestCode: contestCode,
+    }).exec();
+
+    if (found == null) {
+        res.status(400).send("This virtual contest does not exist.");
+    } else {
+        await VirtualContest.findOneAndUpdate({ username: username, contestCode: contestCode, isRunning: true }, { isRunning: false });
+        res.redirect(`/virtual/${contestCode}`);
+    }
+});
+
+
+router.get("/virtual/fetchRanklist/:contestCode", checkAccessToken, async (req, res) => {
+    const username = req.cookies["username"];
+    const contestCode = req.params.contestCode;
+    const state = await doesVirtualExist(username, contestCode);
+
+    if (state == 0) {
+        // case 0 : virtual contest for this user and contestCode doesnt exist.
+        // Display Error Page (No such virtual contest exists for username).
+        res.status(400).send("This virtual contest doesn't exist for current user.");
+    } else {
+        // case 1 : contest exists
+        let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+
+        const data = await prepareRanklist(contestCode, options);
+        res.send(data);
+    }
+});
+
+
+router.get(
+    "/virtual/:contestCode/ranklist",
+    checkAccessToken,
+    async (req, res) => {
+
+        const username = req.cookies["username"];
+        const contestCode = req.params.contestCode;
+        const state = await doesVirtualExist(username, contestCode);
+        console.log("Virtual state : " + state);
+        if (state == 0) {
+            // case 0 : virtual contest for this user and contestCode doesnt exist.
+            // Display Error Page (No such virtual contest exists for username).
+            res.status(400).send("This virtual contest doesn't exist for current user.");
+        } else {
+            // case 1 : contest exists
+            const vc = await VirtualContest.findOne({
+                username: username,
+                contestCode: contestCode,
+            }).exec();
+
+            let details = {
+                realStartTime: vc.realStartTime,
+                isRunning: vc.isRunning,
+                startTime: vc.startTime,
+                endTime: vc.endTime,
+                contestCode: contestCode
+            };
+            console.log(details);
+            res.render("virtualRanklist", details);
+        }
+    }
+);
+
+router.get("/virtual/:contestCode", checkAccessToken, async (req, res) => {
     const username = req.cookies["username"];
     const contestCode = req.params.contestCode;
     const state = await doesVirtualExist(username, contestCode);
     console.log(state);
     if (state == 0) {
-        /* 
-            case 0 : virtual contest for this user and contestCode doesnt exist.
-            Display Error Page (No such virtual contest exists for username).
-        */
+        // case 0 : virtual contest for this user and contestCode doesnt exist.
+        // Display Error Page (No such virtual contest exists for username).
         res.status(400).send("This virtual contest doesn't exist for current user.");
-    } else if (state == 1) {
-        /* 
-            case 1 : start time is less than current time and within contest duration.
-            Display Dashboard with problems links.
-            Display Ranklist page link.
-        */
-        res.status(400).send("This virtual contest is running.");
+    } else {
+        // case 1 : start time is less than current time and within contest duration.
+        // Display Dashboard with problems links.
+        const vc = await VirtualContest.findOne({
+            username: username,
+            contestCode: contestCode,
+        }).exec();
 
-    } else if (state == 2) {
-        /* 
-        case 3 : Time is up and VC is over. 
-        Display Dashboard with final ranklist and user position.
-        */
-        res.status(400).send("This virtual contest has ended.");
+        let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+        let details = await fetchContest(contestCode, options);
+        details['isRunning'] = vc.isRunning;
+        details['endTime'] = vc.endTime;
+
+        res.render("virtualDashboard", details);
     }
 });
+
+
 
 router.get(
     "/virtual/:contestCode/:problemCode",
     checkAccessToken,
-    (req, res) => {
-        // req obj should have start time.
-        /* 
-            case 0 : virtual contest for this user and contestCode doesnt exist.
-            Display Error Page (No such virtual contest exists for username).
-        */
-        /* 
-            case 1 : start time is less than current time and within contest duration.
-            Dis play Problem Page with Countdown.
-        */
-        /* 
-            case 2 : start time is greater than current time.
-            Display Dashboard with CountDown. (ask user to refresh page when CountDown is over.) 
-        */
-        /* 
-            case 3 : Time is up and VC is over. 
-            Display Dashboard with final ranklist and user position.
-        */
-        res.render("dashboard");
+    async (req, res) => {
+
+        const username = req.cookies["username"];
+        const contestCode = req.params.contestCode;
+        const state = await doesVirtualExist(username, contestCode);
+        console.log("Virtual state : " + state);
+        if (state == 0) {
+            // case 0 : virtual contest for this user and contestCode doesnt exist.
+            // Display Error Page (No such virtual contest exists for username).
+            res.status(400).send("This virtual contest doesn't exist for current user.");
+        } else {
+            // case 1 : start time is less than current time and within contest duration.
+            // Display Dashboard with problems links.
+            const vc = await VirtualContest.findOne({
+                username: username,
+                contestCode: contestCode,
+            }).exec();
+
+            let options = { 'Authorization': 'Bearer ' + decrypt(req.cookies['accessToken']) };
+            let details = await fetchProblemDetails(contestCode, req.params.problemCode, options);
+            details['isRunning'] = vc.isRunning;
+            details['endTime'] = vc.endTime;
+            details['contestCode'] = contestCode;
+            console.log(details);
+            res.render("virtualProblemPage", details);
+        }
     }
 );
-// router.get("/startVirtual/:contestCode",checkAccessToken,(req,res)=>{
-
-// });
-
-router.get("virtual/endVc",checkAccessToken, async (req, res) => {
-  //check if virtual exist and if it exist delete from schema virtualcontest
-  const contestCode = req.query.code;
-  const username = req.cookies["username"];
-  //render user rank
-  //Save the user rank here and render in a seperate page
-  const found = await VirtualContest.findOne({
-    username: username,
-    contestCode: contestCode
-  }).exec();
-  if(found==null){
-    res.status(400).send("This virtual contest does not exist.");
-  }else{
-  VirtualContest.remove({
-    username: username
-  }, function (err) {
-    if(err) console.log(err);
-    console.log("Successful deletion");
-  });
-  res.render("dashboard");
-  }
-})
 
 
 module.exports = router;

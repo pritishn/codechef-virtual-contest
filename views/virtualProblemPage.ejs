@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body class="bg-dark text-white justify-content-center">
+  <%- include('partials/header') %>
+  <div id="timer">
+    <span id="rem-time"></span>
+    <button id="end-virtual" onclick="finishVirtual('<%=code%>')">End Virtual</button>
+  </div>
+
+  <a href="/virtual/<%=code%>/ranklist">Click for Ranklist</a>
+  <style>
+    h3 {
+      font-size: 1.4em;
+      display: inline-block;
+    }
+    h2 {
+      display: inline-block;
+    }
+  </style>
+  <div class="container-fluid" style="padding: 0px 10px 0px 10px;">
+    <%- include('partials/navigation') %>
+      <span class="text-white">
+        <h2>
+          <%= problemName %>
+        </h2>
+      </span>
+      <a href="https://www.codechef.com/submit/<%= problemCode %>"><button class="btn btn-outline-light">Submit on
+          codechef</button></a>
+
+      <p class="text-white " id="problem-statement"><%- body %></p>
+  </div>
+</body>
+<script src="/js/virtualHelper.js"></script>
+<script>
+  
+  let ok = "<%= isRunning %>";
+  if (ok == "true") {
+    let endTime = "<%= endTime %>";
+    countdown(endTime);
+  } else {
+    document.getElementById("rem-time").innerHTML = "Virtual Finished";
+    document.getElementById("end-virtual").remove();
+  }
+
+  let converter = new showdown.Converter();
+  converter.setOption('omitExtraWLInCodeBlocks', true);
+  converter.setOption('noHeaderId', true);
+  converter.setOption('parseImgDimensions', true);
+  converter.setOption('simplifiedAutoLink', true);
+  converter.setOption('literalMidWordUnderscores', true);
+  converter.setOption('strikethrough', true);
+  converter.setOption('tables', true);
+  converter.setOption('tablesHeaderId', false);
+  converter.setOption('ghCodeBlocks', true);
+  converter.setOption('tasklists', true);
+  converter.setOption('smoothLivePreview', true);
+  converter.setOption('prefixHeaderId', false);
+  converter.setOption('disableForced4SpacesIndentedSublists', false);
+  converter.setOption('ghCompatibleHeaderId', true);
+  converter.setOption('smartIndentationFix', false);
+
+  let html1 = converter.makeHtml(document.getElementById('problem-statement').innerHTML);
+  document.getElementById('problem-statement').innerHTML = html1;
+</script>
+
+</body>
+
+</html>

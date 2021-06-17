@@ -1,14 +1,15 @@
-const { forEach } = require('async');
-const request = require('request');
 const { fetchContest, fetchRanklist } = require('../api_helpers/api');
-const {Rank,Problem,Contest} = require("../models/Models");
-const { options } = require('../routes');
-
+const { Contest, Ranklist} = require("../models/Models");
 
 const prepareRanklist = async (contestCode,options) =>{
     let offset = 0;
-    let rankList = [];
-    while(true){
+    let ranklist = await Ranklist.findOne({
+        contestCode:contestCode
+    }).exec();
+
+    if(ranklist != null ) return ranklist; 
+    ranklist = {contestCode : contestCode,ranks:[]};
+    while(offset <= 3000){
         let ranks = await fetchRanklist(contestCode,offset,options);
         if(ranks == null) break;
         for (let i = 0; i < ranks.length; i++) {
@@ -19,11 +20,13 @@ const prepareRanklist = async (contestCode,options) =>{
                 totalScore : ranks[i].totalScore,
                 problemScore : ranks[i].problemScore
             };
-            rankList.push(element);
+            ranklist.ranks.push(element);
         }
         offset+=1500;
     }
-    return rankList;
+    let newRanklist = new Ranklist(ranklist);
+    await newRanklist.save();
+    return ranklist;
 };
 const ParseDate  = (d) => {
     let nd = d.substring(0,10)+"T"+d.substring(11);

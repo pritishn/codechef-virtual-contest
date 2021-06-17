@@ -1,49 +1,48 @@
 const mongoose = require("mongoose");
 
-const RankSchema =  new mongoose.Schema({
-  rank: {
-    type: Number,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  penalty: {
-    type: Number,
-    required: true,
-  },
-  totalScore: {
-    type: Number,
-    required: true,
-  },
-  problemScore: [
-    {
-      problemCode: {
-        type: String,
-        required: true,
-      },
-      bestSolutionTime: {
-        type: Number,
-        required: true,
-      },
-      penalty: {
-        type: Number,
-        required: true,
-      },
-      score: {
-        type: Number,
-        required: true,
-      },
-    }
-  ]
-});
 const RanklistSchema =  new mongoose.Schema({
   contestCode : {
     type:String,
     required:true
   },
-  ranks : [RankSchema]
+  ranks : [{
+    rank: {
+      type: Number,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    penalty: {
+      type: Number,
+      required: true,
+    },
+    totalScore: {
+      type: Number,
+      required: true,
+    },
+    problemScore: [
+      {
+        problemCode: {
+          type: String,
+          required: true,
+        },
+        bestSolutionTime: {
+          type: Number,
+          required: true,
+        },
+        penalty: {
+          type: Number,
+          required: true,
+        },
+        score: {
+          type: Number,
+          required: true,
+        },
+      }
+    ]
+  }]
 });
 
 
@@ -95,6 +94,9 @@ const VirutalContestSchema =  new mongoose.Schema({
     type: Boolean,
     required: true
   },
+  realStartTime : {
+    type: Date
+  },
   startTime: {
     type: Date
   },
@@ -118,5 +120,6 @@ const VirutalContestSchema =  new mongoose.Schema({
 
 module.exports =  {  
   VirtualContest :  mongoose.model("VirtualContest", VirutalContestSchema),
-  Contest : mongoose.model("Contest", ContestSchema)
+  Contest : mongoose.model("Contest", ContestSchema),
+  Ranklist : mongoose.model("Ranklist",RanklistSchema)
 }

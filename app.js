@@ -1,4 +1,5 @@
 const dotenv = require("dotenv");
+const compression = require('compression');
 const express = require("express");
 const connectDB = require('./config/db.js');
 const cookieParser = require('cookie-parser');
@@ -10,8 +11,8 @@ dotenv.config({ path: "./config/config.env" });
 //connecting the database
 connectDB();
 
-
 app.use(express.static(__dirname + '/public'));
+app.use(compression());
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 
