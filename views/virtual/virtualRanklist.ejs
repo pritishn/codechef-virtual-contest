@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <div id="timer">
+    <span id="rem-time"></span>
+    <button id="end-virtual" onclick="finishVirtual('<%= contestCode %>')">End Virtual</button>
+  </div>
+  <table id="contest-table">
+    <thead>
+      <tr>
+        <th scope="col">Rank</th>
+        <th scope="col">Userame</th>
+        <th scope="col">Score</th>
+        <th scope="col">Penalty</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  <script language="javascript" src="/js/lz-string.js"></script>
+  <script src="/js/virtualHelper.js"></script>
+  <script>
+
+    let ok = "<%= isRunning %>";
+    if (ok == "true") { 
+      let endTime = "<%= endTime %>";
+      countdown(endTime);
+    } else {
+      document.getElementById("rem-time").innerHTML = "Virtual Finished";
+      document.getElementById("end-virtual").remove();
+    }
+    renderCurrentRanklist();
+  </script>
+</body>
+
+</html>

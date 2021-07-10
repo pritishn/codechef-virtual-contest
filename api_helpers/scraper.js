@@ -1,7 +1,7 @@
 const { fetchContest, fetchRanklist } = require('../api_helpers/api');
 const { Contest, Ranklist} = require("../models/Models");
 
-const prepareRanklist = async (contestCode,options) =>{
+const prepareRanklist = async (contestCode,oauth_header) =>{
     let offset = 0;
     let ranklist = await Ranklist.findOne({
         contestCode:contestCode
@@ -10,7 +10,7 @@ const prepareRanklist = async (contestCode,options) =>{
     if(ranklist != null ) return ranklist; 
     ranklist = {contestCode : contestCode,ranks:[]};
     while(offset <= 3000){
-        let ranks = await fetchRanklist(contestCode,offset,options);
+        let ranks = await fetchRanklist(contestCode,offset,oauth_header);
         if(ranks == null) break;
         for (let i = 0; i < ranks.length; i++) {
             let element = {
@@ -33,8 +33,8 @@ const ParseDate  = (d) => {
     let date = new Date(nd);
     return date.getTime();
 }
-const prepareContest = async (contestCode,options) =>{
-    let contest = await fetchContest(contestCode,options);
+const prepareContest = async (contestCode,oauth_header) =>{
+    let contest = await fetchContest(contestCode,oauth_header);
     let problems = contest.problemsList;
     
     let problemData = [];
@@ -55,5 +55,8 @@ const prepareContest = async (contestCode,options) =>{
     };
     const newContest = new Contest(contestObj);
     newContest.save();
+};
+const initiateSubmissionTracker = async (contestCode, oauth_header) => {
+    
 };
 module.exports = {prepareContest,prepareRanklist};
