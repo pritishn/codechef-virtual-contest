@@ -1,3 +1,4 @@
+"use strict";
 const dotenv = require("dotenv");
 const compression = require('compression');
 const express = require("express");
@@ -18,6 +19,8 @@ app.set('view engine', 'ejs');
 
 app.listen(process.env.PORT,console.log(`Started running in ${process.env.NODE_ENV} mode on port http://localhost:${process.env.PORT}.`));
 
-app.use(require('./routes/auth')); // routes related to authorization states.
+// initiateSubmissionTracker();
+
+app.use(require('./routes/auth')); // routes related to authorization states
 app.use(require('./routes/index')); // routes related to finding contests
-app.use(require('./routes/virtual')); // routes related to virtual contest 
+app.use(require('./routes/virtual')); // routes related to virtual contest

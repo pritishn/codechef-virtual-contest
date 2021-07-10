@@ -10,10 +10,7 @@
     <p>Pressing the start button will start the virtual participation for contest <%=contestCode %>.</p>
     <button onclick="startVirtual()">START</button>
     <script>
-     var d = new Date();
-     function startVirtual(){
-      window.location.href = `/registerVC?code=${'<%=contestCode%>'}`;
-     }
+     function startVirtual(){ window.location.href = `/registerVC?code=${'<%=contestCode%>'}`;}
     </script>
   </body>
 </html>
